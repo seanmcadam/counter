@@ -4,13 +4,27 @@ import (
 	"log"
 	"testing"
 
+	"github.com/seanmcadam/counter/common"
 	"github.com/seanmcadam/ctx"
 )
 
 func TestCounter_compile(t *testing.T) {
 }
 
-func TestNewCounter(t *testing.T) {
+func TestNewCounters(t *testing.T) {
+	bits := []common.CounterBits{BIT64, BIT32, BIT16, BIT8}
+	cx := ctx.New()
+
+	for _, b := range bits {
+		cs := New(cx, b)
+		v := cs.Next()
+		log.Printf("Bits:%d", v.Bits())
+		log.Printf("cs64:%d", v.Uint())
+	}
+
+}
+
+func TestNewCounterX(t *testing.T) {
 	cx := ctx.New()
 
 	cs64 := NewCounter64(cx)

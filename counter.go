@@ -11,6 +11,8 @@ import (
 	log "github.com/seanmcadam/loggy"
 )
 
+type Counter counterint.CounterStructInt
+
 const BIT8 = common.BIT8
 const BIT16 = common.BIT16
 const BIT32 = common.BIT32

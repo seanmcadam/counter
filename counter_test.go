@@ -15,19 +15,22 @@ func TestNewCounter(t *testing.T) {
 
 	cs64 := NewCounter64(cx)
 	v := cs64.Next()
-	log.Printf("cs64:%d", v.Uint())
 	log.Printf("Bits:%d", v.Bits())
+	log.Printf("cs64:%d", v.Uint())
 
 	cs32 := NewCounter32(cx)
 	v = cs32.Next()
+	log.Printf("Bits:%d", v.Bits())
 	log.Printf("cs32:%d", v.Uint())
 
 	cs16 := NewCounter16(cx)
 	v = cs16.Next()
+	log.Printf("Bits:%d", v.Bits())
 	log.Printf("cs16:%d", v.Uint())
 
 	cs8 := NewCounter8(cx)
 	v = cs8.Next()
+	log.Printf("Bits:%d", v.Bits())
 	log.Printf("cs8:%d", v.Uint())
 
 	_ = v

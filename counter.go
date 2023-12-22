@@ -1,6 +1,7 @@
 package counter
 
 import (
+	"github.com/seanmcadam/counter/common"
 	"github.com/seanmcadam/counter/counter16"
 	"github.com/seanmcadam/counter/counter32"
 	"github.com/seanmcadam/counter/counter64"
@@ -9,6 +10,27 @@ import (
 	"github.com/seanmcadam/ctx"
 	log "github.com/seanmcadam/loggy"
 )
+
+const BIT8 = common.BIT8
+const BIT16 = common.BIT16
+const BIT32 = common.BIT32
+const BIT64 = common.BIT64
+
+func New(cx *ctx.Ctx, b common.CounterBits) counterint.CounterStructInt {
+	switch b {
+	case BIT8:
+		return NewCounter8(cx)
+	case BIT16:
+		return NewCounter16(cx)
+	case BIT32:
+		return NewCounter32(cx)
+	case BIT64:
+		return NewCounter64(cx)
+	default:
+		log.Fatalf("Unknown BIT value %d", b)
+	}
+	return nil
+}
 
 func NewCounter64(cx *ctx.Ctx) counterint.CounterStructInt {
 	cs := counter64.New(cx)

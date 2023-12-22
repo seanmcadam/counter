@@ -18,7 +18,7 @@ const BIT16 = common.BIT16
 const BIT32 = common.BIT32
 const BIT64 = common.BIT64
 
-func New(cx *ctx.Ctx, b common.CounterBits) counterint.CounterStructInt {
+func New(cx *ctx.Ctx, b common.CounterBits) Counter {
 	switch b {
 	case BIT8:
 		return NewCounter8(cx)
@@ -34,22 +34,22 @@ func New(cx *ctx.Ctx, b common.CounterBits) counterint.CounterStructInt {
 	return nil
 }
 
-func NewCounter64(cx *ctx.Ctx) counterint.CounterStructInt {
+func NewCounter64(cx *ctx.Ctx) Counter {
 	cs := counter64.New(cx)
 	return cs
 }
 
-func NewCounter32(cx *ctx.Ctx) counterint.CounterStructInt {
+func NewCounter32(cx *ctx.Ctx) Counter {
 	cs := counter32.New(cx)
 	return cs
 }
 
-func NewCounter16(cx *ctx.Ctx) counterint.CounterStructInt {
+func NewCounter16(cx *ctx.Ctx) Counter {
 	cs := counter16.New(cx)
 	return cs
 }
 
-func NewCounter8(cx *ctx.Ctx) counterint.CounterStructInt {
+func NewCounter8(cx *ctx.Ctx) Counter {
 	cs := counter8.New(cx)
 	return cs
 }

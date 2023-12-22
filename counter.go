@@ -1,6 +1,8 @@
 package counter
 
 import (
+	"encoding/binary"
+
 	"github.com/seanmcadam/counter/common"
 	"github.com/seanmcadam/counter/counter16"
 	"github.com/seanmcadam/counter/counter32"
@@ -12,6 +14,7 @@ import (
 )
 
 type Counter counterint.CounterStructInt
+type Count counterint.CounterInt
 
 const BIT8 = common.BIT8
 const BIT16 = common.BIT16
@@ -54,7 +57,7 @@ func NewCounter8(cx *ctx.Ctx) Counter {
 	return cs
 }
 
-func NewCount(c interface{}) counterint.CounterInt {
+func NewCount(c interface{}) Count {
 	switch val := c.(type) {
 	case uint8:
 		return counter8.NewCount(val)
@@ -66,6 +69,25 @@ func NewCount(c interface{}) counterint.CounterInt {
 		return counter64.NewCount(val)
 	default:
 		log.Fatalf("NewCount() type:%v", val)
+	}
+
+	return nil
+}
+
+func ByteToCount(b []byte) Count {
+	switch len(b) {
+	case 1:
+		c8 := counter8.Counter8(b[0])
+		return &c8
+	case 2:
+		c16 := counter16.Counter16(binary.BigEndian.Uint16(b))
+		return &c16
+	case 4:
+		c32 := counter32.Counter32(binary.BigEndian.Uint32(b))
+		return &c32
+	case 8:
+		c64 := counter64.Counter64(binary.BigEndian.Uint64(b))
+		return &c64
 	}
 
 	return nil

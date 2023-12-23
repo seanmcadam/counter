@@ -2,12 +2,14 @@ package counter
 
 import (
 	"encoding/binary"
+	"fmt"
 
 	"github.com/seanmcadam/counter/common"
 	"github.com/seanmcadam/counter/counter16"
 	"github.com/seanmcadam/counter/counter32"
 	"github.com/seanmcadam/counter/counter64"
 	"github.com/seanmcadam/counter/counter8"
+	"github.com/seanmcadam/counter/countererrors"
 	"github.com/seanmcadam/counter/counterint"
 	"github.com/seanmcadam/ctx"
 	log "github.com/seanmcadam/loggy"
@@ -74,21 +76,22 @@ func NewCount(c interface{}) Count {
 	return nil
 }
 
-func ByteToCount(b []byte) Count {
-	switch len(b) {
+func ByteToCount(b []byte) (c Count, err error) {
+	x := len(b)
+	switch x {
 	case 1:
 		c8 := counter8.Counter8(b[0])
-		return &c8
+		return &c8, nil
 	case 2:
 		c16 := counter16.Counter16(binary.BigEndian.Uint16(b))
-		return &c16
+		return &c16, nil
 	case 4:
 		c32 := counter32.Counter32(binary.BigEndian.Uint32(b))
-		return &c32
+		return &c32, nil
 	case 8:
 		c64 := counter64.Counter64(binary.BigEndian.Uint64(b))
-		return &c64
+		return &c64, nil
 	}
 
-	return nil
+	return nil, countererrors.ErrCounterBadParameter(fmt.Errorf("ByteToCount() Byte len(b): %d", x))
 }

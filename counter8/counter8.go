@@ -1,6 +1,8 @@
 package counter8
 
 import (
+	"fmt"
+
 	"github.com/seanmcadam/counter/common"
 	"github.com/seanmcadam/counter/counterint"
 )
@@ -29,4 +31,8 @@ func (c *Counter8) ToByte() (b []byte) {
 func (c *Counter8) Copy() counterint.CounterInt {
 	copy := *c
 	return &copy
+}
+
+func (c *Counter8) String() string {
+	return fmt.Sprintf("%d", c)
 }

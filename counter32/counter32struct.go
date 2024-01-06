@@ -21,7 +21,7 @@ func New(cx *ctx.Ctx) counterint.CounterStructInt {
 	}
 	c := &Counter32Struct{
 		cx:      cx,
-		countCh: make(chan *Counter32),
+		countCh: make(chan *Counter32, common.ChanDepth),
 	}
 	go c.goRun()
 	return c

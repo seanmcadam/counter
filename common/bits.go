@@ -7,10 +7,10 @@ import (
 type CounterBits uint8
 
 const (
-	BIT8  = 8
-	BIT16 = 16
-	BIT32 = 32
-	BIT64 = 64
+	BIT8  CounterBits = 8
+	BIT16 CounterBits = 16
+	BIT32 CounterBits = 32
+	BIT64 CounterBits = 64
 )
 
 func (c CounterBits) Number() uint8 {
@@ -24,7 +24,7 @@ func (c CounterBits) Number() uint8 {
 	case BIT64:
 		return uint8(64)
 	default:
-		log.Fatal("c:%d", uint8(c))
+		log.Fatalf("c:%d", c)
 	}
 	return 0
 }
@@ -40,7 +40,7 @@ func (c CounterBits) String() string {
 	case BIT64:
 		return "64"
 	default:
-		log.Fatal("c:%d", uint8(c))
+		log.Fatalf("c:%d", c)
 	}
 	return " _unknown_ "
 }

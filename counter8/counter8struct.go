@@ -19,7 +19,7 @@ func New(cx *ctx.Ctx) counterint.CounterStructInt {
 	}
 	c := &Counter8Struct{
 		cx:      cx,
-		countCh: make(chan *Counter8),
+		countCh: make(chan *Counter8, common.ChanDepth),
 	}
 	go c.goRun()
 	return c

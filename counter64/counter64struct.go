@@ -3,11 +3,11 @@ package counter64
 import (
 	"encoding/binary"
 
+	"github.com/seanmcadam/counter/common"
 	"github.com/seanmcadam/counter/countererrors"
 	"github.com/seanmcadam/counter/counterint"
 	"github.com/seanmcadam/ctx"
 	log "github.com/seanmcadam/loggy"
-	"github.com/seanmcadam/counter/common"
 )
 
 type Counter64Struct struct {
@@ -21,7 +21,7 @@ func New(cx *ctx.Ctx) counterint.CounterStructInt {
 	}
 	c := &Counter64Struct{
 		cx:      cx,
-		countCh: make(chan *Counter64),
+		countCh: make(chan *Counter64, common.ChanDepth),
 	}
 	go c.goRun()
 	return c

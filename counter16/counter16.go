@@ -2,6 +2,7 @@ package counter16
 
 import (
 	"encoding/binary"
+	"fmt"
 
 	"github.com/seanmcadam/counter/common"
 	"github.com/seanmcadam/counter/counterint"
@@ -31,4 +32,8 @@ func (c *Counter16) ToByte() (b []byte) {
 func (c *Counter16) Copy() counterint.CounterInt {
 	copy := *c
 	return &copy
+}
+
+func (c *Counter16) String() string {
+	return fmt.Sprintf("%d", c)
 }

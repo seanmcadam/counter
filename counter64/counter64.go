@@ -2,9 +2,10 @@ package counter64
 
 import (
 	"encoding/binary"
+	"fmt"
 
-	"github.com/seanmcadam/counter/counterint"
 	"github.com/seanmcadam/counter/common"
+	"github.com/seanmcadam/counter/counterint"
 )
 
 type Counter64 uint64
@@ -31,4 +32,8 @@ func (c *Counter64) ToByte() (b []byte) {
 func (c *Counter64) Copy() counterint.CounterInt {
 	copy := *c
 	return &copy
+}
+
+func (c *Counter64) String() string {
+	return fmt.Sprintf("%d", c)
 }

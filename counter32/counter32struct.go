@@ -31,7 +31,7 @@ func (*Counter32Struct) Bits() common.CounterBits {
 	return common.BIT32
 }
 
-func (c *Counter32Struct) Next() counterint.CounterInt {
+func (c *Counter32Struct) Next() counterint.CountInt {
 	if c == nil {
 		log.FatalStack("Nil counter pointer")
 	}
@@ -39,7 +39,7 @@ func (c *Counter32Struct) Next() counterint.CounterInt {
 	return <-c.countCh
 }
 
-func (*Counter32Struct) ByteToCounter(b []byte) (c counterint.CounterInt, err error) {
+func (*Counter32Struct) ByteToCounter(b []byte) (c counterint.CountInt, err error) {
 	if len(b) != 4 {
 		return nil, countererrors.ErrCounterBadParameter(log.Errf("Count data len:%d, :%0x", len(b), b))
 	}

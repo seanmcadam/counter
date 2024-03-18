@@ -5,6 +5,10 @@ import (
 	"testing"
 
 	"github.com/seanmcadam/counter/common"
+	"github.com/seanmcadam/counter/counter16"
+	"github.com/seanmcadam/counter/counter32"
+	"github.com/seanmcadam/counter/counter64"
+	"github.com/seanmcadam/counter/counter8"
 	"github.com/seanmcadam/ctx"
 )
 
@@ -27,22 +31,22 @@ func TestNewCounters(t *testing.T) {
 func TestNewCounterX(t *testing.T) {
 	cx := ctx.New()
 
-	cs64 := NewCounter64(cx)
+	cs64 := counter64.New(cx)
 	v := cs64.Next()
 	log.Printf("Bits:%d", v.Bits())
 	log.Printf("cs64:%d", v.Uint())
 
-	cs32 := NewCounter32(cx)
+	cs32 := counter32.New(cx)
 	v = cs32.Next()
 	log.Printf("Bits:%d", v.Bits())
 	log.Printf("cs32:%d", v.Uint())
 
-	cs16 := NewCounter16(cx)
+	cs16 := counter16.New(cx)
 	v = cs16.Next()
 	log.Printf("Bits:%d", v.Bits())
 	log.Printf("cs16:%d", v.Uint())
 
-	cs8 := NewCounter8(cx)
+	cs8 := counter8.New(cx)
 	v = cs8.Next()
 	log.Printf("Bits:%d", v.Bits())
 	log.Printf("cs8:%d", v.Uint())
@@ -53,17 +57,17 @@ func TestNewCounterX(t *testing.T) {
 func TestNewCounter64(t *testing.T) {
 	cx := ctx.New()
 
-	cs64 := NewCounter64(cx)
+	cs64 := counter64.New(cx)
 	v := cs64.Next()
 	log.Printf("Count:%s\n", string(v.ToByte()))
 
-	cs32 := NewCounter32(cx)
+	cs32 := counter32.New(cx)
 	v = cs32.Next()
 
-	cs16 := NewCounter16(cx)
+	cs16 := counter16.New(cx)
 	v = cs16.Next()
 
-	cs8 := NewCounter8(cx)
+	cs8 := counter8.New(cx)
 	v = cs8.Next()
 
 	_ = v
@@ -74,7 +78,7 @@ func TestByteToCounter64(t *testing.T) {
 	var b []byte = []byte{0, 0, 0, 0, 0, 0, 0, 0}
 
 	cx := ctx.New()
-	cs64 := NewCounter64(cx)
+	cs64 := counter64.New(cx)
 	c, err := cs64.ByteToCounter(b)
 	if err != nil {
 		t.Fatalf("Error:%s", err)
@@ -90,7 +94,7 @@ func TestByteToCounter32(t *testing.T) {
 	var b []byte = []byte{0, 0, 0, 0}
 
 	cx := ctx.New()
-	cs32 := NewCounter32(cx)
+	cs32 := counter32.New(cx)
 	c, err := cs32.ByteToCounter(b)
 	if err != nil {
 		t.Fatalf("Error:%s", err)
@@ -106,7 +110,7 @@ func TestByteToCounter16(t *testing.T) {
 	var b []byte = []byte{0, 0}
 
 	cx := ctx.New()
-	cs16 := NewCounter16(cx)
+	cs16 := counter16.New(cx)
 	c, err := cs16.ByteToCounter(b)
 	if err != nil {
 		t.Fatalf("Error:%s", err)
@@ -122,7 +126,7 @@ func TestByteToCounter8(t *testing.T) {
 	var b []byte = []byte{0}
 
 	cx := ctx.New()
-	cs8 := NewCounter8(cx)
+	cs8 := counter8.New(cx)
 	c, err := cs8.ByteToCounter(b)
 	if err != nil {
 		t.Fatalf("Error:%s", err)

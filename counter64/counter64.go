@@ -10,7 +10,7 @@ import (
 
 type Counter64 uint64
 
-func NewCount(c uint64) counterint.CounterInt {
+func NewCount(c uint64) counterint.CountInt {
 	c64 := Counter64(c)
 	return &c64
 }
@@ -29,7 +29,7 @@ func (c *Counter64) ToByte() (b []byte) {
 	return b
 }
 
-func (c *Counter64) Copy() counterint.CounterInt {
+func (c *Counter64) Copy() counterint.CountInt {
 	copy := *c
 	return &copy
 }

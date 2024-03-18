@@ -31,7 +31,7 @@ func (*Counter64Struct) Bits() common.CounterBits {
 	return common.BIT64
 }
 
-func (*Counter64Struct) ByteToCounter(b []byte) (c counterint.CounterInt, err error) {
+func (*Counter64Struct) ByteToCounter(b []byte) (c counterint.CountInt, err error) {
 	if len(b) != 8 {
 		return nil, countererrors.ErrCounterBadParameter(log.Errf("Count data len:%d, :%0x", len(b), b))
 	}
@@ -40,7 +40,7 @@ func (*Counter64Struct) ByteToCounter(b []byte) (c counterint.CounterInt, err er
 	return c, nil
 }
 
-func (c *Counter64Struct) Next() counterint.CounterInt {
+func (c *Counter64Struct) Next() counterint.CountInt {
 	if c == nil {
 		log.FatalStack("Nil counter pointer")
 	}

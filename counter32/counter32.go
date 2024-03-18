@@ -10,7 +10,7 @@ import (
 
 type Counter32 uint32
 
-func NewCount(c uint32) counterint.CounterInt {
+func NewCount(c uint32) counterint.CountInt {
 	c32 := Counter32(c)
 	return &c32
 }
@@ -29,7 +29,7 @@ func (c *Counter32) ToByte() (b []byte) {
 	return b
 }
 
-func (c *Counter32) Copy() counterint.CounterInt {
+func (c *Counter32) Copy() counterint.CountInt {
 	copy := *c
 	return &copy
 }

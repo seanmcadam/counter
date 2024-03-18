@@ -9,7 +9,7 @@ import (
 
 type Counter8 uint8
 
-func NewCount(c uint8) counterint.CounterInt {
+func NewCount(c uint8) counterint.CountInt {
 	c8 := Counter8(c)
 	return &c8
 }
@@ -28,7 +28,7 @@ func (c *Counter8) ToByte() (b []byte) {
 	return b
 }
 
-func (c *Counter8) Copy() counterint.CounterInt {
+func (c *Counter8) Copy() counterint.CountInt {
 	copy := *c
 	return &copy
 }

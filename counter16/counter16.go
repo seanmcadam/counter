@@ -10,7 +10,7 @@ import (
 
 type Counter16 uint16
 
-func NewCount(c uint16) counterint.CounterInt {
+func NewCount(c uint16) counterint.CountInt {
 	c16 := Counter16(c)
 	return &c16
 }
@@ -29,7 +29,7 @@ func (c *Counter16) ToByte() (b []byte) {
 	return b
 }
 
-func (c *Counter16) Copy() counterint.CounterInt {
+func (c *Counter16) Copy() counterint.CountInt {
 	copy := *c
 	return &copy
 }

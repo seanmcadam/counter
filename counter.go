@@ -12,11 +12,12 @@ import (
 	"github.com/seanmcadam/counter/countererrors"
 	"github.com/seanmcadam/counter/counterint"
 	"github.com/seanmcadam/ctx"
+	"github.com/seanmcadam/loggy"
 	log "github.com/seanmcadam/loggy"
 )
 
 type Counter counterint.CounterStructInt
-type Count counterint.CounterInt
+type Count counterint.CountInt
 
 const BIT8 = common.BIT8
 const BIT16 = common.BIT16
@@ -41,6 +42,26 @@ func New(cx *ctx.Ctx, b common.CounterBits) Counter {
 
 func NewCount(c interface{}) Count {
 	switch val := c.(type) {
+	case int8:
+		if val < 0 {
+			loggy.Panicf("negative integer")
+		}
+		return counter8.NewCount(uint8(val))
+	case int16:
+		if val < 0 {
+			loggy.Panicf("negative integer")
+		}
+		return counter16.NewCount(uint16(val))
+	case int32:
+		if val < 0 {
+			loggy.Panicf("negative integer")
+		}
+		return counter32.NewCount(uint32(val))
+	case int64:
+		if val < 0 {
+			loggy.Panicf("negative integer")
+		}
+		return counter64.NewCount(uint64(val))
 	case uint8:
 		return counter8.NewCount(val)
 	case uint16:

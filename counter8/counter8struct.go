@@ -29,7 +29,7 @@ func (*Counter8Struct) Bits() common.CounterBits {
 	return common.BIT8
 }
 
-func (*Counter8Struct) ByteToCounter(b []byte) (c counterint.CounterInt, err error) {
+func (*Counter8Struct) ByteToCounter(b []byte) (c counterint.CountInt, err error) {
 	if len(b) != 1 {
 		return nil, countererrors.ErrCounterBadParameter(log.Errf("Count data len:%d, :%0x", len(b), b))
 	}
@@ -37,7 +37,7 @@ func (*Counter8Struct) ByteToCounter(b []byte) (c counterint.CounterInt, err err
 	return &c8, nil
 }
 
-func (c *Counter8Struct) Next() counterint.CounterInt {
+func (c *Counter8Struct) Next() counterint.CountInt {
 	if c == nil {
 		log.FatalStack("Nil counter pointer")
 	}

@@ -10,6 +10,7 @@ import (
 
 type Counter64 uint64
 
+// NewCount create a new 64bit counter
 func NewCount(c uint64) counterint.CountInt {
 	c64 := Counter64(c)
 	return &c64

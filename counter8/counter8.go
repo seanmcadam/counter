@@ -9,6 +9,7 @@ import (
 
 type Counter8 uint8
 
+// NewCount create a new 8bit counter
 func NewCount(c uint8) counterint.CountInt {
 	c8 := Counter8(c)
 	return &c8

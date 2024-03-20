@@ -10,6 +10,7 @@ import (
 
 type Counter32 uint32
 
+// NewCount create a new 32bit counter
 func NewCount(c uint32) counterint.CountInt {
 	c32 := Counter32(c)
 	return &c32

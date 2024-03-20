@@ -1,3 +1,7 @@
+// Package Counter provides an atomic counter
+// used to generate sequential numbers
+//
+
 package counter
 
 import (
@@ -24,6 +28,7 @@ const BIT16 = common.BIT16
 const BIT32 = common.BIT32
 const BIT64 = common.BIT64
 
+// New create a new Counter instance
 func New(cx *ctx.Ctx, b common.CounterBits) Counter {
 	switch b {
 	case BIT8:
@@ -40,6 +45,7 @@ func New(cx *ctx.Ctx, b common.CounterBits) Counter {
 	return nil
 }
 
+// NewCount takes a numeric input an converts it to a Count{} object
 func NewCount(c interface{}) Count {
 	switch val := c.(type) {
 	case int8:
@@ -77,6 +83,7 @@ func NewCount(c interface{}) Count {
 	return nil
 }
 
+// ByteToCount transfors a []byte value to a Count{} object, and returns an error if needed
 func ByteToCount(b []byte) (c Count, err error) {
 	x := len(b)
 	switch x {

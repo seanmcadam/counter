@@ -10,6 +10,7 @@ import (
 
 type Counter16 uint16
 
+// NewCount create a new 16bit counter
 func NewCount(c uint16) counterint.CountInt {
 	c16 := Counter16(c)
 	return &c16

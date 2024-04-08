@@ -7,7 +7,7 @@ import (
 	"github.com/seanmcadam/counter/countererrors"
 	"github.com/seanmcadam/counter/counterint"
 	"github.com/seanmcadam/ctx"
-	log "github.com/seanmcadam/loggy"
+	"github.com/seanmcadam/loggy"
 )
 
 type Counter64Struct struct {
@@ -17,7 +17,7 @@ type Counter64Struct struct {
 
 func New(cx *ctx.Ctx) counterint.CounterStructInt {
 	if cx == nil {
-		log.Fatal("nil ctx")
+		loggy.Fatal("nil ctx")
 	}
 	c := &Counter64Struct{
 		cx:      cx,
@@ -33,7 +33,7 @@ func (*Counter64Struct) Bits() common.CounterBits {
 
 func (*Counter64Struct) ByteToCounter(b []byte) (c counterint.CountInt, err error) {
 	if len(b) != 8 {
-		return nil, countererrors.ErrCounterBadParameter(log.Errf("Count data len:%d, :%0x", len(b), b))
+		return nil, countererrors.ErrCounterBadParameter(loggy.Errf("Count data len:%d, :%0x", len(b), b))
 	}
 	c64 := Counter64(binary.BigEndian.Uint64(b))
 	c = &c64
@@ -42,7 +42,7 @@ func (*Counter64Struct) ByteToCounter(b []byte) (c counterint.CountInt, err erro
 
 func (c *Counter64Struct) Next() counterint.CountInt {
 	if c == nil {
-		log.FatalStack("Nil counter pointer")
+		loggy.FatalStack("Nil counter pointer")
 	}
 
 	return <-c.countCh
@@ -53,7 +53,7 @@ func (c *Counter64Struct) Next() counterint.CountInt {
 // -
 func (c *Counter64Struct) goRun() {
 	if c == nil {
-		log.Fatal()
+		loggy.Fatal()
 	}
 
 	defer c.emptych()

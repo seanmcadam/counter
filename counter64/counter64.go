@@ -6,6 +6,7 @@ import (
 
 	"github.com/seanmcadam/counter/common"
 	"github.com/seanmcadam/counter/counterint"
+	"github.com/seanmcadam/loggy"
 )
 
 type Counter64 uint64
@@ -21,6 +22,9 @@ func (*Counter64) Bits() common.CounterBits {
 }
 
 func (c *Counter64) Uint() uint64 {
+	if c == nil {
+		loggy.Fatal("Counter64 Ptr is nil")
+	}
 	return uint64(*c)
 }
 
@@ -37,4 +41,8 @@ func (c *Counter64) Copy() counterint.CountInt {
 
 func (c *Counter64) String() string {
 	return fmt.Sprintf("%d", c)
+}
+
+func (c *Counter64) checkfornil() {
+	loggy.FatalStack("nil method")
 }

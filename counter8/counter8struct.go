@@ -5,7 +5,7 @@ import (
 	"github.com/seanmcadam/counter/countererrors"
 	"github.com/seanmcadam/counter/counterint"
 	"github.com/seanmcadam/ctx"
-	log "github.com/seanmcadam/loggy"
+	 "github.com/seanmcadam/loggy"
 )
 
 type Counter8Struct struct {
@@ -15,7 +15,7 @@ type Counter8Struct struct {
 
 func New(cx *ctx.Ctx) counterint.CounterStructInt {
 	if cx == nil {
-		log.Fatal("nil ctx")
+		loggy.Fatal("nil ctx")
 	}
 	c := &Counter8Struct{
 		cx:      cx,
@@ -31,7 +31,7 @@ func (*Counter8Struct) Bits() common.CounterBits {
 
 func (*Counter8Struct) ByteToCounter(b []byte) (c counterint.CountInt, err error) {
 	if len(b) != 1 {
-		return nil, countererrors.ErrCounterBadParameter(log.Errf("Count data len:%d, :%0x", len(b), b))
+		return nil, countererrors.ErrCounterBadParameter(loggy.Errf("Count data len:%d, :%0x", len(b), b))
 	}
 	c8 := Counter8(b[0])
 	return &c8, nil
@@ -39,7 +39,7 @@ func (*Counter8Struct) ByteToCounter(b []byte) (c counterint.CountInt, err error
 
 func (c *Counter8Struct) Next() counterint.CountInt {
 	if c == nil {
-		log.FatalStack("Nil counter pointer")
+		loggy.FatalStack("Nil counter pointer")
 	}
 
 	return <-c.countCh
@@ -50,7 +50,7 @@ func (c *Counter8Struct) Next() counterint.CountInt {
 // -
 func (c *Counter8Struct) goRun() {
 	if c == nil {
-		log.Fatal()
+		loggy.Fatal()
 	}
 
 	defer c.emptych()

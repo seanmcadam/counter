@@ -24,3 +24,23 @@ func TestCounter8_overflow(t *testing.T) {
 
 	cx.Cancel()
 }
+
+
+func TestCounterInt8(t *testing.T) {
+	cx := ctx.New()
+	c8 := New(cx)
+	_ = c8.Bits()
+
+	for i := 0; i < 100; i++ {
+		ci := c8.Next()
+		_ = ci.Bits()
+		_ = ci.Copy()
+		_ = ci.Uint()
+		_ = ci.ToByte()
+		_ = ci.String()
+		_ = NewCount(uint8(ci.Uint()))
+		_, _ = c8.ByteToCounter(ci.ToByte())
+	}
+
+	cx.Cancel()
+}

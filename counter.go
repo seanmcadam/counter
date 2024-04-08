@@ -17,7 +17,6 @@ import (
 	"github.com/seanmcadam/counter/counterint"
 	"github.com/seanmcadam/ctx"
 	"github.com/seanmcadam/loggy"
-	log "github.com/seanmcadam/loggy"
 )
 
 type Counter counterint.CounterStructInt
@@ -40,7 +39,7 @@ func New(cx *ctx.Ctx, b common.CounterBits) Counter {
 	case BIT64:
 		return counter64.New(cx)
 	default:
-		log.Fatalf("Unknown BIT value %d", b)
+		loggy.Fatalf("Unknown BIT value %d", b)
 	}
 	return nil
 }
@@ -77,7 +76,7 @@ func NewCount(c interface{}) Count {
 	case uint64:
 		return counter64.NewCount(val)
 	default:
-		log.Fatalf("NewCount() type:%v", val)
+		loggy.Fatalf("NewCount() type:%v", val)
 	}
 
 	return nil

@@ -5,7 +5,7 @@ import (
 	"github.com/seanmcadam/counter/countererrors"
 	"github.com/seanmcadam/counter/counterint"
 	"github.com/seanmcadam/ctx"
-	 "github.com/seanmcadam/loggy"
+	"github.com/seanmcadam/loggy"
 )
 
 type Counter8Struct struct {
@@ -29,7 +29,8 @@ func (*Counter8Struct) Bits() common.CounterBits {
 	return common.BIT8
 }
 
-func (*Counter8Struct) ByteToCounter(b []byte) (c counterint.CountInt, err error) {
+func (c *Counter8Struct) ByteToCounter(b []byte) (ci counterint.CountInt, err error) {
+	c.checkfornil()
 	if len(b) != 1 {
 		return nil, countererrors.ErrCounterBadParameter(loggy.Errf("Count data len:%d, :%0x", len(b), b))
 	}
@@ -38,6 +39,7 @@ func (*Counter8Struct) ByteToCounter(b []byte) (c counterint.CountInt, err error
 }
 
 func (c *Counter8Struct) Next() counterint.CountInt {
+	c.checkfornil()
 	if c == nil {
 		loggy.FatalStack("Nil counter pointer")
 	}
@@ -49,9 +51,7 @@ func (c *Counter8Struct) Next() counterint.CountInt {
 // goRun()
 // -
 func (c *Counter8Struct) goRun() {
-	if c == nil {
-		loggy.Fatal()
-	}
+	c.checkfornil()
 
 	defer c.emptych()
 
@@ -79,5 +79,11 @@ func (c *Counter8Struct) emptych() {
 			close(c.countCh)
 			return
 		}
+	}
+}
+
+func (c *Counter8Struct) checkfornil() {
+	if c == nil {
+		loggy.FatalStack("nil method")
 	}
 }

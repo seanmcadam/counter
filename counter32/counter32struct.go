@@ -32,14 +32,12 @@ func (*Counter32Struct) Bits() common.CounterBits {
 }
 
 func (c *Counter32Struct) Next() counterint.CountInt {
-	if c == nil {
-		loggy.FatalStack("Nil counter pointer")
-	}
-
+	c.checkfornil()
 	return <-c.countCh
 }
 
-func (*Counter32Struct) ByteToCounter(b []byte) (c counterint.CountInt, err error) {
+func (c *Counter32Struct) ByteToCounter(b []byte) (ci counterint.CountInt, err error) {
+	c.checkfornil()
 	if len(b) != 4 {
 		return nil, countererrors.ErrCounterBadParameter(loggy.Errf("Count data len:%d, :%0x", len(b), b))
 	}
@@ -51,9 +49,7 @@ func (*Counter32Struct) ByteToCounter(b []byte) (c counterint.CountInt, err erro
 // goRun()
 // -
 func (c *Counter32Struct) goRun() {
-	if c == nil {
-		loggy.Fatal()
-	}
+	c.checkfornil()
 
 	defer c.emptych()
 
@@ -70,6 +66,7 @@ func (c *Counter32Struct) goRun() {
 }
 
 func (c *Counter32Struct) emptych() {
+	c.checkfornil()
 	if c == nil {
 		return
 	}
@@ -81,5 +78,11 @@ func (c *Counter32Struct) emptych() {
 			close(c.countCh)
 			return
 		}
+	}
+}
+
+func (c *Counter32Struct) checkfornil() {
+	if c == nil {
+		loggy.FatalStack("nil method")
 	}
 }

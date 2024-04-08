@@ -82,7 +82,7 @@ func NewCount(c interface{}) Count {
 	return nil
 }
 
-// ByteToCount transfors a []byte value to a Count{} object, and returns an error if needed
+// ByteToCount transforms a []byte value to a Count{} object, and returns an error if needed
 func ByteToCount(b []byte) (c Count, err error) {
 	x := len(b)
 	switch x {

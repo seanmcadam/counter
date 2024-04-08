@@ -31,7 +31,8 @@ func (*Counter16Struct) Bits() common.CounterBits {
 	return common.BIT16
 }
 
-func (*Counter16Struct) ByteToCounter(b []byte) (c counterint.CountInt, err error) {
+func (c *Counter16Struct) ByteToCounter(b []byte) (ci counterint.CountInt, err error) {
+	c.checkfornil()
 	if len(b) != 2 {
 		return nil, countererrors.ErrCounterBadParameter(loggy.Errf("Count data len:%d, :%0x", len(b), b))
 	}
@@ -40,9 +41,7 @@ func (*Counter16Struct) ByteToCounter(b []byte) (c counterint.CountInt, err erro
 }
 
 func (c *Counter16Struct) Next() counterint.CountInt {
-	if c == nil {
-		loggy.FatalStack("Nil counter pointer")
-	}
+	c.checkfornil()
 
 	return <-c.countCh
 }
@@ -51,10 +50,7 @@ func (c *Counter16Struct) Next() counterint.CountInt {
 // goRun()
 // -
 func (c *Counter16Struct) goRun() {
-	if c == nil {
-		loggy.Fatal()
-	}
-
+	c.checkfornil()
 	defer c.emptych()
 
 	var counter Counter16 = 0
@@ -81,5 +77,11 @@ func (c *Counter16Struct) emptych() {
 			close(c.countCh)
 			return
 		}
+	}
+}
+
+func (c *Counter16Struct) checkfornil() {
+	if c == nil {
+		loggy.FatalStack("nil method")
 	}
 }

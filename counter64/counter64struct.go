@@ -27,23 +27,23 @@ func New(cx *ctx.Ctx) counterint.CounterStructInt {
 	return c
 }
 
-func (*Counter64Struct) Bits() common.CounterBits {
+func (c *Counter64Struct) Bits() common.CounterBits {
+	c.checkfornil()
 	return common.BIT64
 }
 
-func (*Counter64Struct) ByteToCounter(b []byte) (c counterint.CountInt, err error) {
+func (c *Counter64Struct) ByteToCounter(b []byte) (ci counterint.CountInt, err error) {
+	c.checkfornil()
 	if len(b) != 8 {
 		return nil, countererrors.ErrCounterBadParameter(loggy.Errf("Count data len:%d, :%0x", len(b), b))
 	}
 	c64 := Counter64(binary.BigEndian.Uint64(b))
-	c = &c64
-	return c, nil
+	ci = &c64
+	return ci, nil
 }
 
 func (c *Counter64Struct) Next() counterint.CountInt {
-	if c == nil {
-		loggy.FatalStack("Nil counter pointer")
-	}
+	c.checkfornil()
 
 	return <-c.countCh
 }
@@ -52,10 +52,7 @@ func (c *Counter64Struct) Next() counterint.CountInt {
 // goRun()
 // -
 func (c *Counter64Struct) goRun() {
-	if c == nil {
-		loggy.Fatal()
-	}
-
+	c.checkfornil()
 	defer c.emptych()
 
 	var counter Counter64 = 0
@@ -82,5 +79,11 @@ func (c *Counter64Struct) emptych() {
 			close(c.countCh)
 			return
 		}
+	}
+}
+
+func (c *Counter64Struct) checkfornil() {
+	if c == nil {
+		loggy.FatalStack("nil method")
 	}
 }

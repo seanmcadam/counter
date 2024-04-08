@@ -17,11 +17,13 @@ func NewCount(c uint64) counterint.CountInt {
 	return &c64
 }
 
-func (*Counter64) Bits() common.CounterBits {
+func (c *Counter64) Bits() common.CounterBits {
+	c.checkfornil()
 	return common.BIT64
 }
 
 func (c *Counter64) Uint() uint64 {
+	c.checkfornil()
 	if c == nil {
 		loggy.Fatal("Counter64 Ptr is nil")
 	}
@@ -29,20 +31,25 @@ func (c *Counter64) Uint() uint64 {
 }
 
 func (c *Counter64) ToByte() (b []byte) {
+	c.checkfornil()
 	b = make([]byte, 8)
 	binary.BigEndian.PutUint64(b, uint64(*c))
 	return b
 }
 
 func (c *Counter64) Copy() counterint.CountInt {
+	c.checkfornil()
 	copy := *c
 	return &copy
 }
 
 func (c *Counter64) String() string {
+	c.checkfornil()
 	return fmt.Sprintf("%d", c)
 }
 
 func (c *Counter64) checkfornil() {
-	loggy.FatalStack("nil method")
+	if c == nil {
+		loggy.FatalStack("nil method")
+	}
 }

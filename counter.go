@@ -1,104 +1,115 @@
-// Package Counter provides an atomic counter
-// used to generate sequential numbers
-//
-
 package counter
 
 import (
-	"encoding/binary"
 	"fmt"
+	"reflect"
 
-	"github.com/seanmcadam/counter/common"
-	"github.com/seanmcadam/counter/counter16"
-	"github.com/seanmcadam/counter/counter32"
-	"github.com/seanmcadam/counter/counter64"
-	"github.com/seanmcadam/counter/counter8"
-	"github.com/seanmcadam/counter/countererrors"
-	"github.com/seanmcadam/counter/counterint"
 	"github.com/seanmcadam/ctx"
 	"github.com/seanmcadam/loggy"
+	"golang.org/x/exp/constraints"
 )
 
-type Counter counterint.CounterStructInt
-type Count counterint.CountInt
+type Count[T constraints.Unsigned] struct{ count T }
 
-const BIT8 = common.BIT8
-const BIT16 = common.BIT16
-const BIT32 = common.BIT32
-const BIT64 = common.BIT64
+type CounterStruct[T constraints.Unsigned] struct {
+	cx *ctx.Ctx
+	ch chan *Count[T]
+}
 
-// New create a new Counter instance
-func New(cx *ctx.Ctx, b common.CounterBits) Counter {
-	switch b {
-	case BIT8:
-		return counter8.New(cx)
-	case BIT16:
-		return counter16.New(cx)
-	case BIT32:
-		return counter32.New(cx)
-	case BIT64:
-		return counter64.New(cx)
+func New64(cx *ctx.Ctx) *CounterStruct[uint64] {
+	return New[uint64](cx)
+}
+func New32(cx *ctx.Ctx) *CounterStruct[uint32] {
+	return New[uint32](cx)
+}
+func New16(cx *ctx.Ctx) *CounterStruct[uint16] {
+	return New[uint16](cx)
+}
+func New8(cx *ctx.Ctx) *CounterStruct[uint8] {
+	return New[uint8](cx)
+}
+
+func New[T constraints.Unsigned](cx *ctx.Ctx) (c *CounterStruct[T]) {
+	if cx == nil {
+		loggy.Fatal("nil ctx")
+	}
+	c = &CounterStruct[T]{
+		cx: cx,
+		ch: make(chan *Count[T], 5),
+	}
+	go c.goRun()
+	return c
+}
+
+func (c *CounterStruct[T]) Next() *Count[T] {
+	c.checkfornil()
+	return <-c.ch
+}
+
+func (c *Count[T]) Uint() (u T) {
+	u = c.count
+	return u
+}
+
+func (c *Count[T]) ToBEByte() (b []byte) {
+	c.checkfornil()
+	switch reflect.TypeOf(c.count).Kind() {
+	case reflect.Uint64:
+		return Uint64BigEndianToBytes(uint64(c.count))
+	case reflect.Uint32:
+		return Uint32BigEndianToBytes(uint32(c.count))
+	case reflect.Uint16:
+		return Uint16BigEndianToBytes(uint16(c.count))
+	case reflect.Uint8:
+		return Uint8BigEndianToBytes(uint8(c.count))
 	default:
-		loggy.Fatalf("Unknown BIT value %d", b)
+		loggy.FatalfStack("Type:%s", reflect.TypeOf(c).Kind())
 	}
 	return nil
 }
 
-// NewCount takes a numeric input an converts it to a Count{} object
-func NewCount(c interface{}) Count {
-	switch val := c.(type) {
-	case int8:
-		if val < 0 {
-			loggy.Panicf("negative integer")
-		}
-		return counter8.NewCount(uint8(val))
-	case int16:
-		if val < 0 {
-			loggy.Panicf("negative integer")
-		}
-		return counter16.NewCount(uint16(val))
-	case int32:
-		if val < 0 {
-			loggy.Panicf("negative integer")
-		}
-		return counter32.NewCount(uint32(val))
-	case int64:
-		if val < 0 {
-			loggy.Panicf("negative integer")
-		}
-		return counter64.NewCount(uint64(val))
-	case uint8:
-		return counter8.NewCount(val)
-	case uint16:
-		return counter16.NewCount(val)
-	case uint32:
-		return counter32.NewCount(val)
-	case uint64:
-		return counter64.NewCount(val)
-	default:
-		loggy.Fatalf("NewCount() type:%v", val)
-	}
-
-	return nil
+func (c *Count[T]) String() string {
+	c.checkfornil()
+	return fmt.Sprintf("%d", c)
 }
 
-// ByteToCount transforms a []byte value to a Count{} object, and returns an error if needed
-func ByteToCount(b []byte) (c Count, err error) {
-	x := len(b)
-	switch x {
-	case 1:
-		c8 := counter8.Counter8(b[0])
-		return &c8, nil
-	case 2:
-		c16 := counter16.Counter16(binary.BigEndian.Uint16(b))
-		return &c16, nil
-	case 4:
-		c32 := counter32.Counter32(binary.BigEndian.Uint32(b))
-		return &c32, nil
-	case 8:
-		c64 := counter64.Counter64(binary.BigEndian.Uint64(b))
-		return &c64, nil
-	}
+// -
+// goRun()
+// -
+func (c *CounterStruct[T]) goRun() {
+	c.checkfornil()
+	defer c.emptych()
+	defer close(c.ch)
 
-	return nil, countererrors.ErrCounterBadParameter(fmt.Errorf("ByteToCount() Byte len(b): %d", x))
+	var cnt T = 0
+	for {
+		cnt += 1
+		count := &Count[T]{count: cnt}
+		select {
+		case c.ch <- count:
+		case <-c.cx.DoneChan():
+			return
+		}
+	}
+}
+
+func (c *CounterStruct[T]) emptych() {
+	c.checkfornil()
+	for l := len(c.ch); l > 0; l = len(c.ch) {
+		if nil == <-c.ch {
+			break
+		}
+	}
+}
+
+func (c *CounterStruct[T]) checkfornil() {
+	if c == nil {
+		loggy.FatalStack("nil method")
+	}
+}
+
+func (c *Count[T]) checkfornil() {
+	if c == nil {
+		loggy.FatalStack("nil method")
+	}
 }

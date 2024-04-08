@@ -1,22 +1,22 @@
 # counter
 Atomic counter
 
+New[uintxx]
+New8
+New16
+New32
+New64
 
-
-NewCounterX() creates a interface to a counter with X bits and returns a CounterStructInt{}
+New[uint] or NewNN creates a counter with X bits and returns a CounterStuct{}
 The different sizes of counters are for limiting the size of the required byte array when
-the data is transmitted over the wire.  Internaly the counters are processed as 64 bits when used.
+the data is transmitted over the wire.  Counts are returned as a struct ptr, and can take 
+advantage of some methods.  .Uint() will return the count as the correct sized uint
 
-
-type Counter counterint.CounterStructInt
+To get a uintNN of the counter value use Uint()
+To convert to a properly sized Big Endian []byte value use ToBEByte()
+To get a copy of the CounterInt use Copy()
 
 You can atomicly get the next counter number by calling Next(), which returns a CounterInt
-To find out the depth of counter call Bits() => 8, 16, 32, 64
-To convert a byte string to a CounterInt{} use ByteToCounter()
 
-type Count counterint.CountInt
+The counterStruct primes the channel with hard coded number of values so Next() is fast.
 
-To get a uint64 of the counter value use Uint()
-To get the depth of the CounterInt{} use Bits()
-To convert to a properly sized []byte value use ToByte()
-To get a copy of the CounterInt use Copy()

@@ -23,7 +23,6 @@ func (c *Counter32) Bits() common.CounterBits {
 }
 
 func (c *Counter32) Uint() uint64 {
-	c.checkfornil()
 	return uint64(*c)
 }
 
